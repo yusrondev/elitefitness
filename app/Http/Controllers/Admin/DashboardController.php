@@ -121,7 +121,7 @@ class DashboardController extends Controller
             $monthlyData[] = DB::table('member_gym')
                 ->whereBetween('created_at', [$startOfMonth3, $endOfMonth3])
                 ->count();
-        }
+        }   
 
         if (config('app.debug')) {
             logger('Monthly Data:', $monthlyData);
