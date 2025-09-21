@@ -54,36 +54,30 @@ class DashboardController extends Controller
         $startOfYear2 = Carbon::now()->startOfYear();
         $endOfYear2 = Carbon::now()->endOfYear();
         $total_member2 = DB::table('member_gym')
-            ->where('idpaket', 2)
             ->whereBetween('created_at', [$startOfYear2, $endOfYear2])
             ->count();
 
-        // Total member bulan ini dengan idpaket = 2
         $startOfMonth2 = Carbon::now()->startOfMonth();
         $endOfMonth2 = Carbon::now()->endOfMonth();
         $total_this_month2 = DB::table('member_gym')
-            ->where('idpaket', 2)
             ->whereBetween('created_at', [$startOfMonth2, $endOfMonth2])
             ->count();
 
-        // Total member bulan lalu dengan idpaket = 2
         $startOfLastMonth2 = Carbon::now()->subMonth()->startOfMonth();
         $endOfLastMonth2 = Carbon::now()->subMonth()->endOfMonth();
         $total_last_month2 = DB::table('member_gym')
-            ->where('idpaket', 2)
             ->whereBetween('created_at', [$startOfLastMonth2, $endOfLastMonth2])
             ->count();
 
-        // Hitung persentase perubahan
         $percentage_change2 = $total_last_month2 > 0
-            ? (($total_this_month2 - $total_last_month2) / $total_last_month2) * 100
-            : 0;
+            ? round((($total_this_month2 - $total_last_month2) / $total_last_month2) * 100, 1)
+            : ($total_this_month2 > 0 ? 100 : 0);
+        
 
         // Total member hari ini dengan idpaket = 2
         $startOfToday3 = Carbon::now()->startOfDay();
         $endOfToday3 = Carbon::now()->endOfDay();
         $total_today3 = DB::table('member_gym')
-            ->where('idpaket', 2)
             ->whereBetween('created_at', [$startOfToday3, $endOfToday3])
             ->count();
 
@@ -91,7 +85,6 @@ class DashboardController extends Controller
         $startOfYesterday3 = Carbon::now()->subDay()->startOfDay();
         $endOfYesterday3 = Carbon::now()->subDay()->endOfDay();
         $total_yesterday3 = DB::table('member_gym')
-            ->where('idpaket', 2)
             ->whereBetween('created_at', [$startOfYesterday3, $endOfYesterday3])
             ->count();
 
@@ -100,17 +93,15 @@ class DashboardController extends Controller
             ? (($total_today3 - $total_yesterday3) / $total_yesterday3) * 100
             : 0;
 
-        $total_members = DB::table('member_gym')->where('idpaket', 2)->count();
+        $total_members = DB::table('member_gym')->count();
 
         // Total Active (end_training >= waktu sekarang)
         $total_active = DB::table('member_gym')
-        ->where('idpaket', 2)
         ->where('end_training', '>=', $now)
         ->count();
 
         // Total Non-Active (end_training < waktu sekarang)
         $total_non_active = DB::table('member_gym')
-            ->where('idpaket', 2)
             ->where('end_training', '<', $now)
             ->count();
 
@@ -184,6 +175,27 @@ class DashboardController extends Controller
             ->whereBetween('notes.created_at', [$start, $end])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
+        $date = null;
+        $date = $date ? Carbon::parse($date, 'Asia/Jakarta') : Carbon::now('Asia/Jakarta');
+
+        $startOfDay = Carbon::parse($date, 'Asia/Jakarta')->startOfDay();  // 2025-09-21 00:00:00 Asia/Jakarta
+        $endOfDay = Carbon::parse($date, 'Asia/Jakarta')->endOfDay();      // 2025-09-21 23:59:59 Asia/Jakarta
+        
+        $startOfDayUtc = $startOfDay->copy()->setTimezone('UTC');
+        $endOfDayUtc = $endOfDay->copy()->setTimezone('UTC');
+        
+        $total_today = DB::table('member_gym')
+            ->whereBetween('created_at', [$startOfDay, $endOfDay])
+            ->count();
+        
+        $total_previous_day = DB::table('member_gym')
+            ->whereBetween('created_at', [$startOfDayUtc, $endOfDayUtc])
+            ->count();
+        
+        $percentage_change_today = $total_previous_day > 0
+            ? round((($total_today - $total_previous_day) / $total_previous_day) * 100, 1)
+            : ($total_today > 0 ? 100 : 0);   
                 
         return view('admin.dashboard', [
             'total_member' => $total_member,
@@ -205,7 +217,8 @@ class DashboardController extends Controller
             'remaining_poin' => $remaining_poin,
             'poin_trainer' => $poin_trainer,
             'income_trainer' => $income_trainer,
-            'notes' => $notes
+            'notes' => $notes,
+            'percentage_change_today' => $percentage_change_today
         ]);
     }
     
