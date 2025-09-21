@@ -1178,35 +1178,48 @@ class MemberController extends Controller
         return redirect()->back()->with('success', 'Data member berhasil ditambahkan.');
     }
 
-    public function checkin(){
-        $admin = User::select('*')->role('super-admin')->get();
-        $super = User::select('*')->role('admin')->get();
+    public function checkin(Request $request){
+        $user = auth()->user(); // pastikan user sudah login
+        $admin = User::role('super-admin')->exists();
+        $super = User::role('admin')->exists();
         $isSuperUser = ($super || $admin);
     
-        // Mengambil data schedule_member berdasarkan kondisi user
-        if ($isSuperUser) {
-            $schedule_member = DB::table('checkin_member')->select('checkin_member.id as id', 'name', 'key_fob', '.checkin_member.created_at as created_at', 'status', '.checkin_member.updated_at as updated_at')->join('users', 'users.id', '=', 'checkin_member.idmember')->get();
-        } else {
-            // Misalnya, jika ingin mengambil data berdasarkan member tertentu
-            $schedule_member = DB::table('checkin_member')
-                ->select('checkin_member.id as id', 'name', 'key_fob', '.checkin_member.created_at as created_at', 'status', '.checkin_member.updated_at as updated_at')
-                ->join('users', 'users.id', '=', 'checkin_member.idmember')
-                ->where('idmember', $user->id)  // Gantilah $id jika ingin menampilkan berdasarkan member lain
-                ->get();
+        // Ambil filter dari request
+        $filterDate = $request->input('filter_date', date('Y-m-d'));
+        $filterName = $request->input('filter_name');
+    
+        $startDate = \Carbon\Carbon::parse($filterDate)->startOfDay();
+        $endDate = \Carbon\Carbon::parse($filterDate)->endOfDay();
+    
+        // Query builder
+        $query = DB::table('checkin_member')
+            ->select('checkin_member.id as id', 'name', 'key_fob', 'checkin_member.created_at as created_at', 'status', 'checkin_member.updated_at as updated_at')
+            ->join('users', 'users.id', '=', 'checkin_member.idmember')
+            ->whereBetween('checkin_member.created_at', [$startDate, $endDate]);
+    
+        // Jika bukan super admin/admin, batasi hanya data member sendiri
+        if (!$isSuperUser) {
+            $query->where('idmember', $user->id);
         }
+    
+        // Jika ada filter nama, tambahkan filter LIKE di nama user
+        if ($filterName) {
+            $query->where('users.name', 'like', '%' . $filterName . '%');
+        }
+    
+        $schedule_member = $query->get();
     
         $events = [];
         foreach ($schedule_member as $checkin) {
             $events[] = [
-                'title' => $checkin->status,  // Ambil status dari tabel checkin_member
-                'start' => \Carbon\Carbon::parse($checkin->created_at)->toDateString(),  // Ambil tanggal check-in
-                'color' => 'red',  // Menentukan warna untuk event
+                'title' => $checkin->status,
+                'start' => \Carbon\Carbon::parse($checkin->created_at)->toDateString(),
+                'color' => 'red',
             ];
         }
     
-        // Kirim data ke view
         return view('admin.member.checkin', compact('schedule_member', 'events'));
-    }
+    }        
     
     public function checkout($id)
     {

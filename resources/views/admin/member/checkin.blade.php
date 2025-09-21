@@ -1,4 +1,5 @@
 @include('admin.layout.menu.tdashboard')
+
 <body>
     <style>
         .nav-pills.light .nav-link.active, .nav-pills.light .show > .nav-link {
@@ -64,8 +65,8 @@
     </div>
    
     <div id="main-wrapper">
-        
         @include('admin.layout.menu.navbar')
+
         <div class="content-body">
             @yield('content')
 			<div class="container-fluid">
@@ -80,44 +81,60 @@
                         {{ session('error') }}
                     </div>
                 @endif
+                
                 <div class="tab-content">
+
                     <div class="card">
                         <div class="card-body">
-                            <table id="example" class="display">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Member</th>
-                                        <th>No. Loker</th>
-                                        <th>Check In</th>
-                                        <th>Check Out</th>
-                                        <th>Paket</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($schedule_member as $row)
+
+                        <form action="{{ route('admin.checkin') }}" method="GET" class="mb-3 d-flex align-items-center gap-2">
+                            <label for="filter_date">Filter Tanggal:</label>
+                            <input type="date" id="filter_date" name="filter_date" value="{{ request('filter_date', date('Y-m-d')) }}" class="form-control" style="max-width: 200px;">
+
+                            <label for="filter_name">Filter Nama:</label>
+                            <input type="text" id="filter_name" name="filter_name" value="{{ request('filter_name') }}" placeholder="Cari nama user..." class="form-control" style="max-width: 200px;">
+
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                            <a href="{{ route('admin.checkin') }}" class="btn btn-secondary">Reset</a>
+                        </form>
+
+                            <div class="table-responsive">
+                                <table id="example" class="display" style="min-width: 845px">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $row->name }}</td>
-                                            <td>{{ $row->key_fob }}</td>
-                                            <td>{{ $row->created_at }}</td>
-                                            <td>
-                                                @if ($row->created_at != $row->updated_at)
-                                                    {{ $row->updated_at }}
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($row->created_at == $row->updated_at)
-                                                    <form action="{{ route('admin.checkout', $row->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('POST')
-                                                        <button type="submit" class="btn btn-primary">CheckOut</button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                                            <th>Nama Member</th>
+                                            <th>No. Loker</th>
+                                            <th>Check In</th>
+                                            <th>Check Out</th>
+                                            <!-- <th>Paket</th> -->
+                                            <th>Aksi</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($schedule_member as $row)
+                                            <tr>
+                                                <td>{{ $row->name }}</td>
+                                                <td>{{ $row->key_fob }}</td>
+                                                <td>{{ $row->created_at }}</td>
+                                                <td>
+                                                    @if ($row->created_at != $row->updated_at)
+                                                        {{ $row->updated_at }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($row->created_at == $row->updated_at)
+                                                        <form action="{{ route('admin.checkout', $row->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('POST')
+                                                            <button type="submit" class="btn btn-primary">CheckOut</button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div><br>
                             <div id="calendar" class="fullcalendar"></div>
                         </div>
                     </div>

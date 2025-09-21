@@ -1,5 +1,5 @@
 @extends('layouts.backoffice')
-@section('title', 'Users')
+@section('title', 'Dashboard')
 @section('content')
     <div class="container-fluid">
         <div class="row">
