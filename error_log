@@ -1,0 +1,45 @@
+[20-Jun-2025 20:40:41 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:40:41 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:40:41 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elir1723/public_html/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/elir1723/public_html/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/elir1723/public_html/vendor/autoload.php(25): ComposerAutoloaderInit626b9e7ddd47fb7eff9aaa53cce0c9ad::getLoader()
+#2 /home/elir1723/public_html/artisan(9): require('/home/elir1723/...')
+#3 {main}
+  thrown in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:40:59 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:40:59 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:40:59 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elir1723/public_html/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/elir1723/public_html/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/elir1723/public_html/vendor/autoload.php(25): ComposerAutoloaderInit626b9e7ddd47fb7eff9aaa53cce0c9ad::getLoader()
+#2 /home/elir1723/public_html/artisan(9): require('/home/elir1723/...')
+#3 {main}
+  thrown in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:16 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:16 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:16 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elir1723/public_html/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/elir1723/public_html/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/elir1723/public_html/vendor/autoload.php(25): ComposerAutoloaderInit626b9e7ddd47fb7eff9aaa53cce0c9ad::getLoader()
+#2 /home/elir1723/public_html/artisan(9): require('/home/elir1723/...')
+#3 {main}
+  thrown in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:20 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:20 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:20 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elir1723/public_html/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/elir1723/public_html/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/elir1723/public_html/vendor/autoload.php(25): ComposerAutoloaderInit626b9e7ddd47fb7eff9aaa53cce0c9ad::getLoader()
+#2 /home/elir1723/public_html/artisan(9): require('/home/elir1723/...')
+#3 {main}
+  thrown in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:23 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:23 Asia/Jakarta] PHP Warning:  require(/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php): Failed to open stream: No such file or directory in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41
+[20-Jun-2025 20:57:23 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Failed opening required '/home/elir1723/public_html/vendor/composer/../symfony/var-dumper/Resources/functions/dump.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/elir1723/public_html/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/elir1723/public_html/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/elir1723/public_html/vendor/autoload.php(25): ComposerAutoloaderInit626b9e7ddd47fb7eff9aaa53cce0c9ad::getLoader()
+#2 /home/elir1723/public_html/artisan(9): require('/home/elir1723/...')
+#3 {main}
+  thrown in /home/elir1723/public_html/vendor/composer/autoload_real.php on line 41

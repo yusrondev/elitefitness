@@ -1,0 +1,169 @@
+.wrapper {
+    position: relative;
+    width: 430px;
+    height: 500px;
+    background-color: var(--white-color);
+    border-radius: 15px;
+    padding: 40px 32px; /* Mengurangi padding */
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 8px 15px var(--shadow-color);
+    transition: var(--transition-3s);
+    overflow: hidden;
+    
+    /* Flexbox untuk menempatkan konten di tengah */
+    display: flex;
+    justify-content: center; /* Menempatkan konten di tengah secara horizontal */
+    align-items: center; /* Menempatkan konten di tengah secara vertikal */
+    text-align: center; /* Memastikan teks juga rata tengah */
+}
+
+.form-header {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 70px;
+    background-color: var(--primary-color);
+    border-radius: 0 0 20px 20px;
+}
+
+.form-header::before, .form-header::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.form-header::before {
+    left: -30px;
+    border-top-right-radius: 50%;
+    box-shadow: 15px 0 0 var(--primary-color);
+}
+
+.form-header::after {
+    right: -30px;
+    border-top-left-radius: 50%;
+    box-shadow: -15px 0 0 var(--primary-color);
+}
+
+.titles {
+    position: relative;
+}
+
+.title-login, .title-register {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: var(--white-color);
+    font-size: 24px;
+    transition: var(--transition-3s);
+}
+
+.title-register {
+    top: 50px;
+}
+
+.login-form {
+    width: 100%; /* Pastikan form memanfaatkan seluruh ruang yang tersedia */
+    max-width: 380px; /* Setel lebar maksimum agar tidak melebihi container */
+    padding-top: 80px; /* Memberikan jarak agar form tidak bertumpukan dengan form-header */
+    transition: var(--transition-3s);
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+.input-field {
+    width: 100%;
+    height: 55px;
+    font-size: 16px;
+    background: transparent;
+    color: var(--black-color);
+    padding: 0 20px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 30px;
+    outline: none;
+    transition: var(--transition-3s);
+}
+
+.input-field:focus {
+    border: 1px solid var(--primary-color);
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    transition: 0.2s;
+    cursor: text;
+}
+
+.input-field:focus ~ .label,
+.input-field:valid ~ .label {
+    top: 0;
+    font-size: 14px;
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    padding: 0 10px;
+}
+
+.input-field:valid ~ .label {
+    color: var(--secondary-color);
+}
+
+.icon {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--secondary-color);
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: var(--transition-3s);
+}
+
+.btn-submit:hover {
+    gap: 15px;
+}
+
+.switch-form {
+    text-align: center;
+}
+
+.switch-form a {
+    font-weight: 500;
+}
+
+/* Responsif */
+@media only screen and (max-width: 564px) {
+    .wrapper {
+        margin: 20px;
+    }
+}
