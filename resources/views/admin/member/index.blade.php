@@ -253,14 +253,14 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label">Member</label>
-                            <select class="form-control" name="idmember" id="idmember" required>
-                                <option value="">-- Pilih Member --</option>
+                            <input list="memberList" name="member_name" id="member_name" class="form-control" placeholder="Ketikan nama member..." required>
+                            <datalist id="memberList">
                                 @foreach ($member as $m)
                                     @if ($m->end_training < now())
-                                    <option value="{{ $m->users_id }}">{{ $m->name }}</option>
+                                        <option value="{{ $m->name }}"></option>
                                     @endif
                                 @endforeach
-                            </select>
+                            </datalist>
                         </div>
                         <div class="col">
                             <label class="form-label">Paket</label>

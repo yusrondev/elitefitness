@@ -786,20 +786,27 @@ class MemberController extends Controller
     public function tambah_dataMember(Request $request)
     {
         $request->validate([
-            'idmember' => 'required|exists:users,id',
+            'member_name' => 'required|string', // ganti dari idmember ke member_name
             'idpaket' => 'required|exists:packets,id',
             'start_training' => 'required|date',
             'end_training' => 'required|date|after_or_equal:start_training',
         ]);
-    
+
+        // Cari user berdasarkan nama member yang diketik
+        $member = User::where('name', $request->member_name)->first();
+
+        if (!$member) {
+            return redirect()->back()->withErrors(['member_name' => 'Member tidak ditemukan'])->withInput();
+        }
+
+        $idmember = $member->id;
+
         $endTraining = Carbon::parse($request->end_training)->endOfDay();
-    
-        $topupInfo = null;
-    
+
         // Simpan data member
         Member_gym::create([
             'iduser' => auth()->id(),
-            'idmember' => $request->idmember,
+            'idmember' => $idmember,
             'idpaket' => $request->idpaket,
             'total_price' => $request->total_price,
             'start_training' => $request->start_training,
@@ -808,7 +815,7 @@ class MemberController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-    
+
         // Update poin jika memilih paket trainer
         if ($request->filled('idpacket_trainer')) {
             $topupInfo->update([
@@ -817,7 +824,7 @@ class MemberController extends Controller
                 'updated_at' => now(),
             ]);
         }
-    
+
         return redirect()->back()->with('success', 'Data member berhasil ditambahkan.');
     }
 
