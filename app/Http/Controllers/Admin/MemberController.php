@@ -1371,4 +1371,47 @@ class MemberController extends Controller
         return response()->json($item);
     }
 
+    public function perpanjanganmember(Request $request, $id)
+    {
+        $request->validate([
+            'idpaket' => 'required|exists:packets,id',
+            'start_training' => 'required|date',
+            'end_training' => 'required|date|after_or_equal:start_training',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        $idmember = $request->idmember;
+
+        // Ambil tanggal end_training dan set ke akhir hari
+        $endTraining = Carbon::parse($request->end_training)->endOfDay();
+
+        // Simpan data perpanjangan ke tabel member_gyms (bukan update yang lama)
+        Member_gym::create([
+            'iduser'         => auth()->id(),
+            'idmember'       => $idmember,
+            'idpaket'        => $request->idpaket,
+            'total_price'    => $request->total_price,
+            'start_training' => $request->start_training,
+            'end_training'   => $endTraining,
+            'description'    => $request->description,
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ]);
+
+        // === Opsi: Kurangi poin trainer jika dipakai ===
+        if ($request->filled('idpacket_trainer')) {
+            // Misalnya kamu punya model TopupInfo yang relasi dengan user
+            $topupInfo = auth()->user()->topupInfo; // Sesuaikan dengan model relasimu
+
+            if ($topupInfo && $topupInfo->total_poin > 0) {
+                $topupInfo->update([
+                    'total_poin' => $topupInfo->total_poin - 1,
+                    'datetop_up' => now(),
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Perpanjangan berhasil disimpan.']);
+    }
+
 }

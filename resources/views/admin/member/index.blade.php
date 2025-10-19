@@ -173,6 +173,12 @@
                                 <a class="dropdown-item" href="{{ route('admin.information.member', $v_active->id) }}" target="_blank">
                                     Absensi
                                 </a>
+                                <button
+                                    type="button" 
+                                    class="dropdown-item perpanjangan-member"
+                                    data-id="{{ $v_active->id }}">
+                                    Perpanjang
+                                </button>
                                     <a class="dropdown-item" href="{{ $v_active->wa_link }}" target="_blank">
                                         Hubungi Sekarang
                                     </a>
@@ -372,6 +378,76 @@
     </div>
 </div>
 
+<!-- Modal Perpanjangan Member -->
+<div class="modal fade" id="perpanjanganMemberModal" tabindex="-1" aria-labelledby="perpanjanganMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="perpanjanganMemberModalLabel">Perpanjangan Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+
+            <form id="perpanjanganMemberForm" action="" method="POST">
+                @csrf
+                <input type="hidden" name="id" id="perpanjangan_member_id_gym">
+                <input type="hidden" name="idmember" id="perpanjangan_idmember_hidden">
+                <input type="hidden" name="total_price" id="perpanjangan_input_total_price">
+
+                <div class="modal-body">
+                    <!-- Nama Member (readonly) -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label">Nama Member</label>
+                            <select class="form-control" id="perpanjangan_idmember" disabled>
+                                <option value="">-- Pilih Member --</option>
+                                @foreach ($member as $m)
+                                    <option value="{{ $m->users_id }}">{{ $m->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Paket</label>
+                            <select class="form-control" name="idpaket" id="perpanjangan_idpaket" required>
+                                <option value="">-- Pilih Paket --</option>
+                                @foreach ($paket as $p)
+                                    <option value="{{ $p->id }}" data-days="{{ $p->days }}">{{ $p->packet_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Tanggal Mulai dan Akhir -->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label">Mulai Latihan</label>
+                            <input type="date" class="form-control" name="start_training" id="perpanjangan_start_training" required onchange="calculatePerpanjanganEndTraining()">
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Akhir Latihan</label>
+                            <input type="date" class="form-control" name="end_training" id="perpanjangan_end_training" required readonly>
+                        </div>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div class="mb-3">
+                        <label class="form-label">Keterangan</label>
+                        <input type="text" class="form-control" name="description" id="perpanjangan_description">
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <div class="me-auto">
+                        <label class="form-label fw-bold">Total Harga:</label>
+                        <span id="perpanjangan_total_price" class="fw-bold">0</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Perpanjang</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -438,6 +514,48 @@ document.addEventListener('DOMContentLoaded', function () {
     const editEndTrainingInput = document.getElementById('edit_end_training');
     const editDescription = document.getElementById('edit_description');
 
+    // ===== Perpanjangan Member =====
+    const perpanjanganIdPaketElement = document.getElementById('perpanjangan_idpaket');
+    const perpanjanganTotalPriceElement = document.getElementById('perpanjangan_total_price');
+    const perpanjanganTotalPriceInput = document.getElementById('perpanjangan_input_total_price');
+    const perpanjanganStartTrainingInput = document.getElementById('perpanjangan_start_training');
+    const perpanjanganEndTrainingInput = document.getElementById('perpanjangan_end_training');
+
+    function calculatePerpanjanganTotalPrice() {
+    const paket = paketData[perpanjanganIdPaketElement?.value] || { price: 0, promote: 0 };
+    const harga = parseInt(paket.promote) > 0 ? parseInt(paket.promote) : parseInt(paket.price);
+    const total = harga;
+
+    if (perpanjanganTotalPriceElement) perpanjanganTotalPriceElement.textContent = formatToRupiah(total);
+        if (perpanjanganTotalPriceInput) perpanjanganTotalPriceInput.value = total;
+    }
+
+    function calculatePerpanjanganEndTraining() {
+        const selectedPaket = perpanjanganIdPaketElement?.options[perpanjanganIdPaketElement.selectedIndex];
+        const days = parseInt(selectedPaket?.getAttribute('data-days')) || 0;
+        const start = perpanjanganStartTrainingInput?.value;
+
+        if (start) {
+            const startDate = new Date(start);
+            startDate.setDate(startDate.getDate() + days - 1);
+            if (perpanjanganEndTrainingInput) perpanjanganEndTrainingInput.value = startDate.toISOString().split('T')[0];
+        } else {
+            if (perpanjanganEndTrainingInput) perpanjanganEndTrainingInput.value = '';
+        }
+    }
+
+    if (perpanjanganIdPaketElement) {
+        perpanjanganIdPaketElement.addEventListener('change', () => {
+            calculatePerpanjanganTotalPrice();
+            calculatePerpanjanganEndTraining();
+        });
+    }
+
+    if (perpanjanganStartTrainingInput) {
+        perpanjanganStartTrainingInput.addEventListener('change', calculatePerpanjanganEndTraining);
+    }
+
+
     function calculateEditTotalPrice() {
         const paket = paketData[editIdPaketElement?.value] || { price: 0, promote: 0 };
         const harga = parseInt(paket.promote) > 0 ? parseInt(paket.promote) : parseInt(paket.price);
@@ -479,6 +597,16 @@ document.addEventListener('DOMContentLoaded', function () {
             calculateEditEndTraining();
         });
     }
+
+        // Trigger hitung ulang saat modal perpanjangan terbuka
+    const perpanjanganModal = document.getElementById('perpanjanganMemberModal');
+    if (perpanjanganModal) {
+        perpanjanganModal.addEventListener('shown.bs.modal', function () {
+            calculatePerpanjanganTotalPrice();
+            calculatePerpanjanganEndTraining();
+        });
+    }
+
 
     // Ekspor formatToRupiah agar bisa dipakai di luar DOMContentLoaded
     window.formatToRupiah = formatToRupiah;
@@ -540,6 +668,54 @@ $('body').on('submit', '#editMemberForm', function(e) {
         alert("Terjadi kesalahan!");
     });
 });
+
+// === BUKA MODAL PERPANJANGAN DAN LOAD DATA ===
+$('body').on('click', '.perpanjangan-member', function(e) {
+    e.preventDefault();
+    let id = $(this).data('id');
+
+    $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    });
+
+    $.post('/api/member-data', { id: id }, function(res) {
+        $("#perpanjanganMemberModal").modal('show');
+
+        $("#perpanjangan_member_id_gym").val(res.id);
+        $("#perpanjangan_idmember_hidden").val(res.idmember);
+        $("#perpanjangan_idmember").val(res.idmember); // ini readonly, tapi tetap diset
+        $("#perpanjangan_description").val('');
+
+        // Kosongkan dan trigger ulang hitungan
+        $("#perpanjangan_idpaket").val('').change();
+        $("#perpanjangan_start_training").val('');
+        $("#perpanjangan_end_training").val('');
+        $("#perpanjangan_total_price").text('0');
+        $("#perpanjangan_input_total_price").val(0);
+    });
+});
+
+// === SUBMIT FORM PERPANJANGAN ===
+// === SUBMIT FORM PERPANJANGAN ===
+$('body').on('submit', '#perpanjanganMemberForm', function(e) {
+    e.preventDefault();
+
+    let id = $("#perpanjangan_member_id_gym").val();
+
+    // ✅ Ganti ke URL yang sesuai prefix 'admin'
+    let url = `/admin/members/perpanjangan/${id}`;
+
+    $.post(url, $(this).serialize(), function(response) {
+        $("#perpanjanganMemberModal").modal('hide');
+        swal("Berhasil", "Member berhasil diperpanjang", "success");
+        setTimeout(() => window.location.reload(), 1000);
+    }).fail(function(xhr) {
+        alert("Terjadi kesalahan saat menyimpan data perpanjangan!");
+        console.error(xhr.responseText);
+    });
+});
+
+
 </script>
 
 <script>
@@ -572,6 +748,5 @@ $('body').on('submit', '#editMemberForm', function(e) {
             }, 100);
         }
     });
-
 </script>
 @endsection

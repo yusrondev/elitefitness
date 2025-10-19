@@ -57,6 +57,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/get-states', [MemberController::class, 'getStates'])->name('get.states');
     Route::get('/get-cities', [MemberController::class, 'getCities'])->name('get.cities');
     Route::put('/members/update/{id}', [MemberController::class, 'update'])->name('members.update');
+    Route::post('/members/perpanjangan/{id}', [MemberController::class, 'perpanjanganmember'])->name('members.perpanjangan');
     Route::get('/admin/editmembers/{id}', [MemberController::class, 'getMember'])->name('members.editmember');
     Route::get('/admin/members', [MemberController::class, 'search'])->name('members.index');
     Route::get('/admin/cetak/{id}', [MemberController::class, 'cetakBarcode'])->name('members.cetakBarcode');
