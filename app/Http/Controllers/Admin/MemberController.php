@@ -1385,8 +1385,11 @@ class MemberController extends Controller
         // Ambil tanggal end_training dan set ke akhir hari
         $endTraining = Carbon::parse($request->end_training)->endOfDay();
 
-        // Simpan data perpanjangan ke tabel member_gyms (bukan update yang lama)
-        Member_gym::create([
+        // Temukan data member_gym yang akan diperbarui
+        $memberGym = Member_gym::findOrFail($id);
+
+        // Update data lama
+        $memberGym->update([
             'iduser'         => auth()->id(),
             'idmember'       => $idmember,
             'idpaket'        => $request->idpaket,
@@ -1394,14 +1397,12 @@ class MemberController extends Controller
             'start_training' => $request->start_training,
             'end_training'   => $endTraining,
             'description'    => $request->description,
-            'created_at'     => now(),
             'updated_at'     => now(),
         ]);
 
         // === Opsi: Kurangi poin trainer jika dipakai ===
         if ($request->filled('idpacket_trainer')) {
-            // Misalnya kamu punya model TopupInfo yang relasi dengan user
-            $topupInfo = auth()->user()->topupInfo; // Sesuaikan dengan model relasimu
+            $topupInfo = auth()->user()->topupInfo; // Sesuaikan dengan relasi model kamu
 
             if ($topupInfo && $topupInfo->total_poin > 0) {
                 $topupInfo->update([
@@ -1411,7 +1412,7 @@ class MemberController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Perpanjangan berhasil disimpan.']);
+        return response()->json(['message' => 'Perpanjangan berhasil diperbarui.']);
     }
 
 }
