@@ -135,7 +135,7 @@
                                     </tbody>
                                 </table>
                             </div><br>
-                            <div id="calendar" class="fullcalendar"></div>
+                            <!-- <div id="calendar" class="fullcalendar"></div> -->
                         </div>
                     </div>
                 </div>

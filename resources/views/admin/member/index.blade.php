@@ -207,39 +207,56 @@
             Showing {{ $active->firstItem() }} to {{ $active->lastItem() }} of {{ $active->total() }} data
         </h4>
         <ul class="pagination mb-3">
+
+            {{-- Previous Button --}}
             @if ($active->onFirstPage())
-                <li class="page-item page-indicator disabled">
-                    <a class="page-link" href="javascript:void(0)">
-                        <i class="fas fa-angle-double-left me-2"></i>Previous
-                    </a>
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
                 </li>
             @else
-                <li class="page-item page-indicator">
-                    <a class="page-link" href="{{ $active->previousPageUrl() }}">
-                        <i class="fas fa-angle-double-left me-2"></i>Previous
-                    </a>
+                <li class="page-item">
+                    <a class="page-link" href="{{ $active->previousPageUrl() }}">Previous</a>
                 </li>
             @endif
 
-            @foreach ($active->getUrlRange(1, $active->lastPage()) as $page => $url)
-                <li class="page-item {{ $page == $active->currentPage() ? 'active' : '' }}">
-                    <a class="page-link {{ $page == $active->currentPage() ? 'active' : '' }}" href="{{ $url }}">{{ $page }}</a>
-                </li>
-            @endforeach
 
+            {{-- Page 1 --}}
+            @if ($active->currentPage() > 3)
+                <li class="page-item">
+                    <a class="page-link" href="{{ $active->url(1) }}">1</a>
+                </li>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            @endif
+
+
+            {{-- Middle Pages (current -1, current, current +1) --}}
+            @for ($i = max(1, $active->currentPage() - 1); $i <= min($active->lastPage(), $active->currentPage() + 1); $i++)
+                <li class="page-item {{ $i == $active->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $active->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+
+            {{-- Last Page --}}
+            @if ($active->currentPage() < $active->lastPage() - 2)
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                <li class="page-item">
+                    <a class="page-link" href="{{ $active->url($active->lastPage()) }}">{{ $active->lastPage() }}</a>
+                </li>
+            @endif
+
+
+            {{-- Next Button --}}
             @if ($active->hasMorePages())
-                <li class="page-item page-indicator">
-                    <a class="page-link" href="{{ $active->nextPageUrl() }}">
-                        Next<i class="fas fa-angle-double-right ms-2"></i>
-                    </a>
+                <li class="page-item">
+                    <a class="page-link" href="{{ $active->nextPageUrl() }}">Next</a>
                 </li>
             @else
-                <li class="page-item page-indicator disabled">
-                    <a class="page-link" href="javascript:void(0)">
-                        Next<i class="fas fa-angle-double-right ms-2"></i>
-                    </a>
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
                 </li>
             @endif
+
         </ul>
     </div>
 </div>

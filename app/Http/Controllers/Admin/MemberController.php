@@ -13,6 +13,7 @@ use App\Models\CheckinMember;
 use App\Models\Packet_trainer;
 use App\Models\Country;
 use App\Models\Cms;
+use App\Models\Cashflow;
 use App\Models\City;
 use App\Models\State;
 use App\Models\User;
@@ -1400,9 +1401,20 @@ class MemberController extends Controller
             'updated_at'     => now(),
         ]);
 
+        // === Tambahkan ke Pembukuan (Cashflow) ===
+        Cashflow::create([
+            'description' => 'Perpanjangan Member ID ' . $idmember,
+            'amount'      => $request->total_price,
+            'type'        => 'income',
+            'date'        => now(),
+            'member_id'   => $idmember,
+            'created_by'  => auth()->id(),
+            'created_at'  => now(),
+        ]);
+
         // === Opsi: Kurangi poin trainer jika dipakai ===
         if ($request->filled('idpacket_trainer')) {
-            $topupInfo = auth()->user()->topupInfo; // Sesuaikan dengan relasi model kamu
+            $topupInfo = auth()->user()->topupInfo;
 
             if ($topupInfo && $topupInfo->total_poin > 0) {
                 $topupInfo->update([
@@ -1412,7 +1424,7 @@ class MemberController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Perpanjangan berhasil diperbarui.']);
+        return response()->json(['message' => 'Perpanjangan berhasil diperbarui & dicatat ke pembukuan.']);
     }
 
 }

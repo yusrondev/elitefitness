@@ -1488,12 +1488,40 @@ class ReportMember extends Controller
             ->leftJoin('users as u', 'income_money.iduser', '=', 'u.id')
             ->whereBetween('income_money.created_at', [$start, $end]);
 
+        // Query 5: data cashflow (DIBERI COLLATION)
+        $queryCashflow = DB::table('cashflow')
+        ->select(
+            'cashflow.member_id as iduser',
+            DB::raw('muser.name COLLATE utf8mb4_unicode_ci as namamember'),
+            DB::raw('u.name COLLATE utf8mb4_unicode_ci as namakasir'),
+            DB::raw('NULL as namatrainer'),
+            'cashflow.date as created_at',
+            DB::raw('NULL as price'),
+            'cashflow.amount as total_price',
+
+            // keterangan tanpa ID — murni tulisannya saja
+            DB::raw("REGEXP_REPLACE(cashflow.description, 'ID [0-9]+', '') COLLATE utf8mb4_unicode_ci as keterangan"),
+
+            // tetap ambil id cashflow
+            'cashflow.id as id',
+
+            // description juga tanpa tambahan apapun
+            DB::raw("REGEXP_REPLACE(cashflow.description, 'ID [0-9]+', '') COLLATE utf8mb4_unicode_ci as description"),
+
+            // nominal uangnya
+            'cashflow.amount as money'
+        )
+        ->leftJoin('users as muser', 'cashflow.member_id', '=', 'muser.id')
+        ->leftJoin('users as u', 'cashflow.created_by', '=', 'u.id')
+        ->whereBetween('cashflow.date', [$start, $end]);
     
             // Gabungkan ketiganya
             $unionQuery = $queryTopup
             ->unionAll($queryMemberGym)
             ->unionAll($queryExpense)
-            ->unionAll($queryIncome);
+            ->unionAll($queryIncome)
+            ->unionAll($queryCashflow); // <-- sudah aman
+
         
         $rawData = DB::table(DB::raw("({$unionQuery->toSql()}) as combined"))
             ->mergeBindings($unionQuery) // penting agar binding dari union tetap ikut
